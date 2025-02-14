@@ -1,0 +1,65 @@
+﻿@using Models
+@model List<Product>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<section style="min-height:100vh;">
+	<div class="card shadow border-0 mt-4 mx-auto">
+		<div class="card-header bg-primary bg-gradient ml-0 py-3">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="text-white py-2">Product List</h2>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+
+			<div class="d-flex justify-content-end mb-4">
+				<a asp-controller="Product" asp-action="Upsert" class="btn btn-primary">
+					<i class="bi bi-plus-square"></i> Add New Product
+				</a>
+			</div>
+
+			<!-- Table Section -->
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>ISBN</th>
+							<th>Price</th>
+							<th>Author</th>
+							<th>Category</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var obj in Model)
+						{
+							<tr>
+								<td class="align-middle">@obj.Title</td>
+								<td class="align-middle">@obj.ISBN</td>
+								<td class="align-middle">@obj.ListPrice</td>
+								<td class="align-middle">@obj.Author</td>
+								<td class="align-middle"></td>
+								<td>
+									<div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+										<a asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id"
+										   class="btn btn-success btn-sm">
+											<i class="bi bi-pencil-square"></i> Edit
+										</a>
+										<a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id"
+										   class="btn btn-danger btn-sm">
+											<i class="bi bi-trash"></i> Delete
+										</a>
+									</div>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</section>
