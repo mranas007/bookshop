@@ -42,7 +42,7 @@
 								<td class="align-middle">@obj.ISBN</td>
 								<td class="align-middle">@obj.ListPrice</td>
 								<td class="align-middle">@obj.Author</td>
-								<td class="align-middle"></td>
+								<td class="align-middle">@obj.Category.Name</td>
 								<td>
 									<div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
 										<a asp-controller="Product" asp-action="Upsert" asp-route-id="@obj.Id"

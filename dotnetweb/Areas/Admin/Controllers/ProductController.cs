@@ -23,7 +23,7 @@ namespace bookshop.Areas.Admin.Controllers
         // show List
         public IActionResult Index()
         {
-            List<Product> objProductData = _unitOfWork.Product.GetAll().ToList();
+            List<Product> objProductData = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
             return View(objProductData);
         }
 
@@ -58,31 +58,50 @@ namespace bookshop.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            if (file != null)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string productPath = Path.Combine(wwwRootPath, @"images\product");
-
-                using (var stramFile = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                {
-                    file.CopyTo(stramFile);
-                }
-                productVM.Product.ImageUrl = @"\images\product" + fileName;
-            }
-            else
-            {
-                productVM.Product.ImageUrl = "";
-            }
             // validations
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(productVM.Product);
+                // it's autometicaly identify the path of hosted app
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                // check if file is exist
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+                    // delete old image
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        string oldImagePath = Path.Combine(productPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                    // save the image into this folder "images/product/"
+                    using (var stramFile = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(stramFile);
+                    }
+                    // bind the model property for inserting Database
+                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                }
+
+                // check if id == 0 Add
+                if (productVM.Product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(productVM.Product);
+                    TempData["success"] = "Product Created Successfully.";
+                }
+                // else if id != 0 Update
+                else
+                {
+                    _unitOfWork.Product.Update(productVM.Product);
+                    TempData["success"] = "Product Updated Successfully.";
+                }
                 _unitOfWork.Save();
-                TempData["success"] = "Product Created Successfully.";
                 return RedirectToAction("Index");
             }
-            // return the Upsert View
+            // else return the Upsert View
             else
             {
                 ProductVM ProductVM = new ProductVM()
