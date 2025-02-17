@@ -11,6 +11,8 @@
 
 	@* toastr cdn link *@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	@* data table cdn *@
+	<link rel="stylesheet" href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
 
 </head>
 <body>
@@ -94,6 +96,10 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
+	@* data table cdn *@
+	<script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js" asp-append-version="true"></script>
+	@* sweet alert2 *@
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	@* tinyMCE cdn *@
 	<script src="https://cdn.tiny.cloud/1/sb1h8mvtddidu8exa4i0ut0n2iqg36yxmud3hd8m8qvc253c/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 	@await RenderSectionAsync("Scripts", required: false)
