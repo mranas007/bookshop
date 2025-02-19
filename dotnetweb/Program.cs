@@ -2,6 +2,7 @@ using DataAccess.Data;
 using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +16,10 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlServer(connection, b => b.MigrationsAssembly("DataAccess")));
 
-// , b => b.MigrationsAssembly("DataAccess")
+builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+// , b => b.MigrationsAssembly("DataAccess")
+builder.Services.AddRazorPages();
 // rgistering DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -31,9 +34,10 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");

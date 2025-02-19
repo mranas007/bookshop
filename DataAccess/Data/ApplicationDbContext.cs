@@ -1,101 +1,115 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models;
-namespace DataAccess.Data
+
+namespace DataAccess.Data;
+
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-    public class ApplicationDbContext : DbContext
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        // created a connection through this constructor.
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
 
-        }
+    }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-        // create these tables into the db through DBSet.
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Product> Products { get; set; }
-
-        // data seeding.
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //seeding in Category
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "History", DisplayOrder = 1 },
-                new Category { Id = 2, Name = "Action", DisplayOrder = 2 },
-                new Category { Id = 3, Name = "Latest", DisplayOrder = 3 }
-            );
-
-            //seeding in Product
-            modelBuilder.Entity<Product>().HasData(
+        // Category seed
+        modelBuilder.Entity<Category>().HasData(
+            new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
+            new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
+            new Category { Id = 3, Name = "History", DisplayOrder = 3 }
+        );
+        // Product seed
+        modelBuilder.Entity<Product>().HasData(
             new Product
             {
                 Id = 1,
-                Title = "C# Programming Guide",
-                Description = "A comprehensive guide to C# programming.",
-                ISBN = "978-1234567890",
-                Author = "John Doe",
-                ListPrice = 49.99,
-                Price = 45.99,
-                Price50 = 40.99,
-                Price100 = 35.99,
-                CategoryId = 2,
+                Title = "Fortune of Time",
+                Author = "Billy Spark",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "SWD9999001",
+                ListPrice = 99,
+                Price = 90,
+                Price50 = 85,
+                Price100 = 80,
+                CategoryId = 1,
                 ImageUrl = ""
             },
             new Product
             {
                 Id = 2,
-                Title = "ASP.NET Core Essentials",
-                Description = "Learn the essentials of ASP.NET Core.",
-                ISBN = "978-0987654321",
-                Author = "Jane Smith",
-                ListPrice = 59.99,
-                Price = 54.99,
-                Price50 = 50.99,
-                Price100 = 45.99,
-                CategoryId = 3,
+                Title = "Dark Skies",
+                Author = "Nancy Hoover",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "CAW777777701",
+                ListPrice = 40,
+                Price = 30,
+                Price50 = 25,
+                Price100 = 20,
+                CategoryId = 1,
                 ImageUrl = ""
             },
             new Product
             {
                 Id = 3,
-                Title = "Entity Framework Core in Action",
-                Description = "Master Entity Framework Core with real-world examples.",
-                ISBN = "978-1122334455",
-                Author = "Mark Johnson",
-                ListPrice = 39.99,
-                Price = 35.99,
-                Price50 = 30.99,
-                Price100 = 25.99,
+                Title = "Vanish in the Sunset",
+                Author = "Julian Button",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "RITO5555501",
+                ListPrice = 55,
+                Price = 50,
+                Price50 = 40,
+                Price100 = 35,
                 CategoryId = 1,
                 ImageUrl = ""
             },
             new Product
             {
                 Id = 4,
-                Title = "Mastering LINQ",
-                Description = "A deep dive into LINQ with practical examples.",
-                ISBN = "978-2233445566",
-                Author = "Emily Davis",
-                ListPrice = 44.99,
-                Price = 40.99,
-                Price50 = 36.99,
-                Price100 = 32.99,
-                CategoryId = 3,
+                Title = "Cotton Candy",
+                Author = "Abby Muscles",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "WS3333333301",
+                ListPrice = 70,
+                Price = 65,
+                Price50 = 60,
+                Price100 = 55,
+                CategoryId = 2,
                 ImageUrl = ""
             },
             new Product
             {
                 Id = 5,
-                Title = "Blazor WebAssembly Guide",
-                Description = "Learn how to build interactive web applications using Blazor WebAssembly.",
-                ISBN = "978-3344556677",
-                Author = "Michael Brown",
-                ListPrice = 69.99,
-                Price = 64.99,
-                Price50 = 59.99,
-                Price100 = 54.99,
-                CategoryId = 1,
+                Title = "Rock in the Ocean",
+                Author = "Ron Parker",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "SOTJ1111111101",
+                ListPrice = 30,
+                Price = 27,
+                Price50 = 25,
+                Price100 = 20,
+                CategoryId = 2,
+                ImageUrl = ""
+            },
+            new Product
+            {
+                Id = 6,
+                Title = "Leaves and Wonders",
+                Author = "Laura Phantom",
+                Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
+                ISBN = "FOT000000001",
+                ListPrice = 25,
+                Price = 23,
+                Price50 = 22,
+                Price100 = 20,
+                CategoryId = 3,
                 ImageUrl = ""
             });
-        }
     }
 }
