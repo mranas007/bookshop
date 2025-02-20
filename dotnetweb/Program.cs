@@ -3,6 +3,9 @@ using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +19,21 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlServer(connection, b => b.MigrationsAssembly("DataAccess")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+// Identity DI
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
 
-// , b => b.MigrationsAssembly("DataAccess")
+// registering RazorPages
 builder.Services.AddRazorPages();
-// rgistering DI
+// rgistering DI for Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// rgistering DI for Email Sending
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
